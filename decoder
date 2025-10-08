@@ -36,13 +36,13 @@ architecture behavioral of traduz is
     case op is --aqui a gente vai separar os casos, já q o op pode ser um desses 8
     
     when soma => is_soma <= '1';
-    when sub => is_soma <= '1';
-    when pula => is_soma <= '1';
-    when parar => is_soma <= '1';
-    when e => is_soma <= '1';
-    when ou => is_soma <= '1';
-    when soma => is_soma <= '1';
-    when soma => is_soma <= '1';
+    when sub => is_sub <= '1';
+    when pula => is_pula <= '1';
+    when parar => is_parar <= '1';
+    when e => is_e <= '1';
+    when ou => is_ou <= '1';
+    when coloc => is_coloc <= '1';
+    when salv => is_salv <= '1';
     
     when others => null;
     
