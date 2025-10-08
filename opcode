@@ -1,0 +1,18 @@
+-- Code your design here
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+package comandos_3bit is
+
+constant add : std_logic_vector(2 downto 0) := "001"; --somar 
+constant sub : std_logic_vector(2 downto 0) := "010"; --subtrair
+constant e : std_logic_vector(2 downto 0) := "011"; -- o nosso e lógico
+constant ou : std_logic_vector(2 downto 0) := "100"; -- o nosso ou lógico
+constant pula : std_logic_vector(2 downto 0) := "101"; --pular uma linha
+constant parar : std_logic_vector(2 downto 0) := "110"; -- finalizar o processo de busca ee execução
+constant coloc : std_logic_vector(2 downto 0) := "111"; --colocar valores em registradores
+constant salv : std_logic_vector(2 downto 0) := "000"; --salvar valores dos registradores na memoria 
+
+-- agente pode fazer: [000] -> operação e [00000] -> 2 registradores 
+
+end comandos_3bits;
