@@ -67,7 +67,7 @@ begin
     
     	begin
         --zera a glr toda caso reset
-        is reset <= '1' then
+        is reset = '1' then
         	pc <= (others => '0');
             reg_a <= (others => '0');
             reg_b <= (others => '0');
