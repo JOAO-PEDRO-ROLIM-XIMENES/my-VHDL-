@@ -1,0 +1,117 @@
+-- Code your testbench here
+library IEEE;
+use IEEE.std_logic_1164.all;
+use work.comandos_3bit.all;
+
+entity processador is 
+ --comunicação com a  memoria. ( local == endereço, por conta do "Ç"  :) )
+ -- entrada: informação da memoria
+ -- saida: informações do processador
+	port(
+    	clock : in std_logic;
+        reset : in std_logic;
+        entrada : in std_logic_vector(7 downto 0);
+        saida : out std_logic_vector(7 downto 0);
+        local : out std_logic_vector(7 downto 0);
+        write : out std_logic
+        );
+        
+        end entity processador;
+        
+architecture estrutura of processador is
+-- pra gente não precisar reescrever toda a tradução dos comandos eu fiz esse component
+	component traduz is
+    
+    	port(
+        	op : in std_logic_vector( 2 downto 0);
+            is_soma : out std_logic;
+            is_sub : out std_logic;
+            is_e : out std_logic;
+            is_ou : out std_logic;
+            is_pula : out std_logic;
+            is_parar : out std_logic;
+            is_coloc : out std_logic;
+        	is_salv : out std_logic;
+        )
+    end component;
+    
+    --criando os registradores pra manipular as variaveis
+    -- reg_memeoria é pra não perder a instrução em tempo de execução
+    signal op : std_logic_vector (2 downto 0);
+    signal reg_memoria : std_logic_vector( 7 downto 0);
+    signal is_soma, is_sub, is_pula, is_parar, is_e, is_ou, is_salv, is_coloc : std_logic;
+    signal reg_a, reg_b, reg_result : std_logic_vector(7 downto 0);
+    --pc é o "program counter", ele avança de posição a cada execução 1->2->3->4
+    -- no pula por exemplo: eu coloquei pc <= pc+2 pra literalmente pular uma instrução
+    signal pc : std_logic_vector(7 downto 0) := (others => '0');
+    
+begin
+
+--instancias pro decoder, não tinha no meu código mas o deepseek recomendou colocar n sei pq
+    inst_traduz : traduz
+         port map(
+             op => op;
+             is_soma => is_soma;
+             is_sub => is_sub;
+             is_e =>	is_e;
+             is_ou => is_ou;
+             is_parar => is_parar;
+             is_pula => is_pula;
+             is_coloc => is_coloc;
+             is_salv => is_salv;
+          );
+-- pegando só os algarismos mais significativos que formam o opcode
+    op <= reg_memoria (7 downto 5);
+--da o loop sempre que houver mudanças no clock ou reset
+    process(clock, reset);
+    
+    	begin
+        --zera a glr toda caso reset
+        is reset <= '1' then
+        	pc <= (others => '0');
+            reg_a <= (others => '0');
+            reg_b <= (others => '0');
+            reg_result <=( others => '0');
+            reg_memoria <=( others => '0');
+            write <= '0';
+           
+        elsif rising_edge(clock) then
+        --buscando novas instruções pra não ficar na mesma sempre
+        	reg_memoria <= entrada;
+            local <= pc;
+            write <= '0';
+            
+            if is_soma = '1' then
+            	reg_result <= reg_a + reg_b;
+            elsif is_sub = '1' then
+            	reg_result <= reg_a - reg_b;
+            elsif is_e = '1' then
+            	reg_result <= reg_a and reg_b;
+            elsif is_ou = '1' then
+            	reg_result <= reg_a or reg_b;
+            --coloca um valor da memoria no regsitrador (informação que ENTROU no processador)
+            --memoria -> processador
+            elsif is_coloc = '1' then
+            	reg_a <= entrada;
+            --salva um valor do registrador na memoria (informação que SAIU do processador)
+            --processador-> memeoria
+            elsif is_salv = '1' then
+            	saida <= reg_a;
+                write <= '1';
+            end if;
+            -- fiz em ifs separados pra não duplicar o incremento
+            if is_pula = '1' then
+            	pc <= pc + 2;
+        	elsif is_parar = '1' then
+            	pc <= pc;
+        	else
+            	pc <= pc + 1;  -- incremento normal
+       	 	end if;
+      end process;     
+end architecture estrutura;        
+            
+            
+    
+
+
+
