@@ -15,4 +15,4 @@ constant salv : std_logic_vector(2 downto 0) := "000"; --salvar valores dos regi
 
 -- agente pode fazer: [000] -> operação e [00000] -> 2 registradores 
 
-end comandos_3bits;
+end package comandos_3bits;
