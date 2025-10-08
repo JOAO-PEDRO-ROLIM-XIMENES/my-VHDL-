@@ -1,0 +1,53 @@
+-- Code your design here
+library IEEE;
+use IEEE.std_logic_1164.all;
+use work.comandos_3bit.all;
+
+entity traduz is
+	port(
+	op : in std_logic_vector(2 downto 0);
+    
+    is_soma : out std_logic;
+    is_sub : out std_logic;
+    is_parar : out std_logic;
+    is_pula : out std_logic;
+    is_coloc : out std_logic;
+    is_salv : out std_logic;
+    is_e : out std_logic;
+    is_ou : out std_logic;
+    );
+
+end traduz;
+
+architecture behavioral of traduz is
+	begin
+    decode_process: process(op) --recebe o opcode
+        
+        
+    is_soma <= '0';
+	is_sub <= '0';
+    is_parar <= '0';
+    is_pula <= '0';
+    is_coloc <= '0';
+    is_salv <= '0';
+    is_e <= '0';
+    is_ou <= '0';
+    
+    case op is --aqui a gente vai separar os casos, já q o op pode ser um desses 8
+    
+    when soma => is_soma <= '1';
+    when sub => is_soma <= '1';
+    when pula => is_soma <= '1';
+    when parar => is_soma <= '1';
+    when e => is_soma <= '1';
+    when ou => is_soma <= '1';
+    when soma => is_soma <= '1';
+    when soma => is_soma <= '1';
+    
+    when others => null;
+    
+    end case;
+    end process decode_process;
+    end architecture behavioral;
+    
+    
